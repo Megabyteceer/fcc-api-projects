@@ -20,29 +20,41 @@ module.exports = function (app, passport) {
 		    
 		    var d = req.params.date;
 		    if(d) {
-		        
 		        var moment = require('moment');
-                
 		        if(d == parseInt(d)){
 		            var date = moment(d,'X');
 	            } else {
 	                var date = moment(d,'MMMM D, YYYY');
 	            }
-		        
 		        res.json({
 		            'unix':date.format('X'),
 		            'natural':date.format('MMMM D, YYYY')
 		        });
-		        
-		        
 		    } else {
 		        res.end('null');
 		    }
-		    
-		    
-		    
-		    
 		})
+		
+	//whoami service
+	app.route('/api-2')
+		.get( function (req, res) {
+		    
+		    
+		    
+		    var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+		    var lang =  req.headers['accept-language'].split(',').shift();
+		    if(!lang){
+		        lang = 'en-US';
+		    }
+		    
+			res.json({
+			    'ipaddress':ip,
+			    'language':lang,
+			    'software':req.useragent.os
+			    
+			});
+		});
+	
 		
 		
 

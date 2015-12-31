@@ -6,6 +6,8 @@ var express = require('express');
 var routes = require('./src/app/routes/index.js');
 
 var app = express();
+var useragent = require('express-useragent');
+app.use(useragent.express());
 
 routes(app);
 
