@@ -64,7 +64,6 @@ module.exports = function(app, passport) {
 
 	//URL Shortener
 	var Link = require("../models/link.js");
-
 	app.route('/api-3')
 		.get(function(req, res) {
 			res.sendFile(path + '/src/public/api-3.html');
@@ -126,8 +125,32 @@ module.exports = function(app, passport) {
 
 
 	//search layer
+	var RecentRequest = require("../models/recent-request.js");
+	app.route('/api-4/recent')
+	.get(function(req, res) {
+		
+		RecentRequest.find({}, function (err, requests) {
+			if(err) throw err;
+			
+			while(requests.length > 30){
+				requests.pop().delete();
+			}
+			var ret =[];
+			
+			requests.forEach(function(r){
+				ret.push({
+					'request':r.q,
+					'time':r.time.toString()
+				})
+			})
+			
+			res.json(ret);
+		});
+		
+	})
 	app.route('/api-4/')
 		.get(function(req, res) {
+		
 
 
 			var q = req.query.q;
@@ -141,6 +164,9 @@ module.exports = function(app, passport) {
 
 			if (q) {
 				//find books by google API
+				
+				new RecentRequest({'q':q}).save();
+				
 				var options = {
 					hostname: 'www.googleapis.com',
 					port: 443,
