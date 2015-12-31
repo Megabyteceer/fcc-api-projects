@@ -4,6 +4,8 @@ require('dotenv').load();
 
 var express = require('express');
 var routes = require('./src/app/routes/index.js');
+var mongoose = require('mongoose');
+mongoose.connect(process.env.MONGO_URI);
 
 var app = express();
 var useragent = require('express-useragent');
