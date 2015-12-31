@@ -226,6 +226,23 @@ module.exports = function(app, passport) {
 
 
 		});
+		
+		
+	//file analyzer
+	var multer = require('multer');
+	var uploading = multer({
+	  dest: path + '/public/uploads/',
+	})
+
+	app.route('/api-5')
+		.get(function(req, res) {
+			res.sendFile(path + '/src/public/api-5.html');
+		})
+		.post(uploading.single('thefile'), function(req, res){
+			res.end('<body style="font-family:Helvetica, arial, nimbussansl, liberationsans, freesans, clean, sans-serif;">File <b>'+req.file.originalname+'</b><br>has size: <b>' + req.file.size +'</b> bytes.</body>');
+			
+		})
+		
 }
 
 function handleLink(res, link) {
